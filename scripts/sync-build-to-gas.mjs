@@ -34,7 +34,6 @@ const inlineScripts = await Promise.all(
   })
 );
 
-const builtAt = new Date().toISOString();
 const compiled = `<!doctype html>
 <html>
   <head>
@@ -53,7 +52,6 @@ ${inlineStyles.join('\n')}
     <script type="module">
 ${inlineScripts.join('\n')}
     </script>
-    <!-- synced at ${builtAt} -->
   </body>
 </html>
 `;

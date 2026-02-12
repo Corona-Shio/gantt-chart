@@ -16,6 +16,34 @@
 - `gas/src/`: Google Apps Script バックエンド
 - `scripts/sync-build-to-gas.mjs`: ViteビルドをGAS `Index.html` に同期
 
+## Git管理ルール（このリポジトリ）
+- Gitに含める（管理対象）
+  - `gas/appsscript.json`
+  - `gas/src/**/*.gs`（GASロジック本体）
+  - `gas/src/Index.html`（フロントビルドの同期先。デプロイ対象）
+  - `frontend/src/**` などのソースコード
+- Gitに含めない（生成物・ローカル情報）
+  - `frontend/dist/`
+  - `node_modules/`
+  - `.clasp.json`（プロジェクトIDなど環境依存情報）
+
+## 運用フロー（推奨）
+1. 開発
+   - フロント変更: `npm run dev`
+   - GAS変更: `gas/src/*.gs` を編集
+2. 反映準備
+   - `npm run build`
+   - これは `frontend` をビルドし、`gas/src/Index.html` を自動同期します
+3. Gitコミット
+   - ソース変更に加えて、必要なら同期後の `gas/src/Index.html` も一緒にコミット
+4. GASへ反映
+   - `npm run gas:push`
+   - 必要に応じて `npm run gas:deploy`
+
+補足:
+- `gas/src/Index.html` は生成物ですが、Apps Scriptへそのままpushする実体のため、このリポジトリでは管理対象にしています。
+- 同期時刻コメントは出力しないようにして、無意味な差分が出ないようにしています。
+
 ## セットアップ
 1. Frontend依存関係のインストール
    - `npm --prefix frontend install`
