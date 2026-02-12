@@ -1,0 +1,7 @@
+**/**
+!gas/appsscript.json
+!gas/src/**/*.gs
+!gas/src/**/*.html
+!appsscript.json
+!src/**/*.gs
+!src/**/*.html

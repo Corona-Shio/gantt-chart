@@ -1,0 +1,16 @@
+{
+  "name": "anime-production-scheduler",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build && node scripts/sync-build-to-gas.mjs",
+    "build:frontend": "npm --prefix frontend run build",
+    "sync:gas": "node scripts/sync-build-to-gas.mjs",
+    "typecheck": "npm --prefix frontend run typecheck",
+    "test": "npm --prefix frontend run test",
+    "gas:push": "clasp push",
+    "gas:deploy": "clasp deploy"
+  }
+}
