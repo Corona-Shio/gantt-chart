@@ -199,21 +199,75 @@ h1 {
   min-width: 130px;
 }
 
+.workspace-stage {
+  min-height: 0;
+  border: 2px solid var(--ink);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+.workspace-head {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  border-bottom: 1px solid var(--line);
+}
+
+.workspace-head-block {
+  padding: 10px 14px;
+  background: #f3e8d7;
+}
+
+.workspace-head-block.main {
+  background:
+    linear-gradient(145deg, rgba(0, 119, 182, 0.12), rgba(202, 103, 2, 0.12)),
+    #f8efe1;
+  border-left: 1px solid #deceb6;
+}
+
+.workspace-head-kicker {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+.workspace-head h2 {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+.workspace-hint {
+  margin: 0;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  border-bottom: 1px dashed #d8c7ae;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
 .workspace-grid {
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(460px, 52%) minmax(400px, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(320px, 30%) minmax(620px, 70%);
+  gap: 0;
 }
 
 .table-panel,
 .gantt-panel {
   min-height: 0;
-  border: 2px solid var(--ink);
-  border-radius: 14px;
-  background: var(--card);
-  box-shadow: var(--shadow);
   overflow: hidden;
+}
+
+.gantt-panel {
+  border-left: 1px solid #deceb6;
+  background: linear-gradient(180deg, rgba(0, 119, 182, 0.04), rgba(255, 255, 255, 0));
 }
 
 .task-table-wrap {
@@ -258,6 +312,38 @@ h1 {
 
 .task-table tr.selected {
   background: #e9f1ff;
+}
+
+.task-table tr.channel-divider {
+  cursor: default;
+}
+
+.task-table tr.channel-divider:hover {
+  background: transparent;
+}
+
+.channel-divider td {
+  padding: 8px;
+  background: #f8f1e6;
+  border-top: 1px solid #e4d8c6;
+  border-bottom: 1px solid #e4d8c6;
+}
+
+.channel-divider-label {
+  font-weight: 700;
+  margin-right: 10px;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+.channel-divider-count {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+.date-range-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .table-actions {
@@ -407,9 +493,23 @@ h1 {
 }
 
 @media (max-width: 1120px) {
+  .workspace-head {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-head-block.main {
+    border-left: none;
+    border-top: 1px solid #deceb6;
+  }
+
   .workspace-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(320px, 42vh) minmax(320px, 46vh);
+    grid-template-rows: minmax(260px, 34vh) minmax(360px, 48vh);
+  }
+
+  .gantt-panel {
+    border-left: none;
+    border-top: 1px solid #deceb6;
   }
 
   .task-form {

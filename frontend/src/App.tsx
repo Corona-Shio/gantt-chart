@@ -31,17 +31,6 @@ const emptyMasterData: MasterData = {
   statuses: []
 };
 
-const emptyDraft = (): TaskDraft => ({
-  status: '',
-  channel: '',
-  assignee: '',
-  script_no: '',
-  task_type: '',
-  task_name: '',
-  start_date: '',
-  end_date: ''
-});
-
 const toDraft = (task: Task): TaskDraft => ({
   status: task.status,
   channel: task.channel,
@@ -444,35 +433,49 @@ export const App = (): JSX.Element => {
         )}
       </section>
 
-      <main className="workspace-grid">
-        <section className="table-panel">
-          <TaskTable
-            tasks={visibleTasks}
-            selectedTaskId={selectedTaskId}
-            statusColors={statusColors}
-            canEdit={canEdit}
-            onSelect={setSelectedTaskId}
-            onEdit={handleEdit}
-            onDelete={(taskId) => {
-              handleDelete(taskId).catch(() => {
-                setBannerMessage('削除に失敗しました。');
-              });
-            }}
-          />
+      <main className="workspace-stage">
+        <section className="workspace-head">
+          <div className="workspace-head-block">
+            <p className="workspace-head-kicker">Table Side</p>
+            <h2>タスク編集ビュー</h2>
+          </div>
+          <div className="workspace-head-block main">
+            <p className="workspace-head-kicker">Main View</p>
+            <h2>ガントチャート</h2>
+          </div>
         </section>
+        <p className="workspace-hint">左のタスク編集内容が右のガントに反映されます。選択状態は左右で同期します。</p>
 
-        <section className="gantt-panel">
-          <GanttView
-            channels={visibleChannels}
-            tasks={visibleTasks}
-            releaseDates={visibleReleaseDates}
-            selectedTaskId={selectedTaskId}
-            canEdit={canEdit}
-            channelColors={channelColors}
-            onSelectTask={setSelectedTaskId}
-            onRequestCreate={handleCreateByRange}
-            onRequestMove={handleMoveTask}
-          />
+        <section className="workspace-grid">
+          <section className="table-panel">
+            <TaskTable
+              tasks={visibleTasks}
+              selectedTaskId={selectedTaskId}
+              statusColors={statusColors}
+              canEdit={canEdit}
+              onSelect={setSelectedTaskId}
+              onEdit={handleEdit}
+              onDelete={(taskId) => {
+                handleDelete(taskId).catch(() => {
+                  setBannerMessage('削除に失敗しました。');
+                });
+              }}
+            />
+          </section>
+
+          <section className="gantt-panel">
+            <GanttView
+              channels={visibleChannels}
+              tasks={visibleTasks}
+              releaseDates={visibleReleaseDates}
+              selectedTaskId={selectedTaskId}
+              canEdit={canEdit}
+              channelColors={channelColors}
+              onSelectTask={setSelectedTaskId}
+              onRequestCreate={handleCreateByRange}
+              onRequestMove={handleMoveTask}
+            />
+          </section>
         </section>
       </main>
 
