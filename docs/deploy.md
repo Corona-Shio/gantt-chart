@@ -13,8 +13,8 @@ npm run build
 
 ## 3. Push
 ```bash
-clasp push
-clasp deploy
+npm run gas:push
+npm run gas:deploy --desc="日本語の変更内容"
 ```
 
 ## 4. Schema initialize
@@ -38,7 +38,15 @@ Apps Script Editor で以下を実行:
 - 更新手順:
   1. `npm run build`
   2. `npm run gas:push`
-  3. `npm run gas:deploy`（同じIDを更新）
+  3. `npm run gas:deploy --desc="日本語の変更内容"`（同じIDを更新）
+
+### デプロイ説明のルール
+- 説明文は日本語推奨（運用上わかりやすいため）。
+- 説明は `--desc="..."` で渡す。
+- 省略した場合は `定期デプロイ` が自動で入る。
+- 実行例:
+  - `npm run gas:deploy --desc="ログイン不具合修正"`
+  - `npm run gas:deploy --desc="APIレスポンス最適化"`
 
 ### 重要: HTML配信の二重経路
 - Apps Script 側では `Index` と `src/Index` のどちらが読まれるかで差が出る場合がある。

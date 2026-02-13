@@ -38,7 +38,7 @@
    - ソース変更に加えて、必要なら同期後の `gas/src/Index.html` も一緒にコミット
 4. GASへ反映
    - `npm run gas:push`
-   - 必要に応じて `npm run gas:deploy`
+   - 必要に応じて `npm run gas:deploy --desc="変更内容"`
 
 補足:
 - `gas/src/Index.html` は生成物ですが、Apps Scriptへそのままpushする実体のため、このリポジトリでは管理対象にしています。
@@ -57,7 +57,8 @@
 2. `gas/src` 配下をpush
    - `npm run gas:push`
 3. Web Appとしてデプロイ
-   - `npm run gas:deploy`
+   - `npm run gas:deploy --desc="ログイン不具合修正"`
+   - 説明を省略する場合は `npm run gas:deploy`（`定期デプロイ` が入る）
 
 ## 初期化
 Apps Script Editorから以下を実行
