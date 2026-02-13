@@ -1,11 +1,31 @@
 import { compareScriptNo } from './scriptSort';
 import type { Task } from '../types';
 
-export const sortTasks = (tasks: Task[]): Task[] => {
+export const sortTasks = (tasks: Task[], channelOrder: string[] = []): Task[] => {
+  const channelPriority = new Map<string, number>();
+  channelOrder.forEach((channel, index) => {
+    channelPriority.set(channel, index);
+  });
+
   return [...tasks].sort((a, b) => {
-    const channel = a.channel.localeCompare(b.channel, 'ja');
-    if (channel !== 0) {
-      return channel;
+    const aPriority = channelPriority.get(a.channel);
+    const bPriority = channelPriority.get(b.channel);
+
+    if (aPriority !== undefined && bPriority !== undefined && aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+
+    if (aPriority !== undefined && bPriority === undefined) {
+      return -1;
+    }
+
+    if (aPriority === undefined && bPriority !== undefined) {
+      return 1;
+    }
+
+    const channelText = a.channel.localeCompare(b.channel, 'ja');
+    if (channelText !== 0) {
+      return channelText;
     }
 
     const scriptNo = compareScriptNo(a.script_no, b.script_no);

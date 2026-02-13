@@ -31,7 +31,7 @@ interface DragState {
 const toTaskItemId = (taskId: string): string => `task:${taskId}`;
 const fromTaskItemId = (itemId: string): string => itemId.replace(/^task:/, '');
 const DAY_MS = 1000 * 60 * 60 * 24;
-const DEFAULT_DAY_WINDOW_DAYS = 31;
+const DAY_GRID_WINDOW_DAYS = 28;
 const DEFAULT_MONTH_WINDOW_DAYS = 365;
 
 export type GanttViewMode = 'day' | 'month';
@@ -61,8 +61,8 @@ const buildTimelineModeOptions = (viewMode: GanttViewMode): Record<string, unkno
       scale: 'day',
       step: 1
     },
-    zoomMin: DAY_MS * 21,
-    zoomMax: DAY_MS * 365 * 2,
+    zoomMin: DAY_MS * DAY_GRID_WINDOW_DAYS,
+    zoomMax: DAY_MS * DAY_GRID_WINDOW_DAYS,
     format: {
       minorLabels: {
         day: 'D'
@@ -108,7 +108,10 @@ export const GanttView = ({
       zoomKey: 'ctrlKey',
       maxHeight: '100%',
       margin: {
-        item: 12,
+        item: {
+          horizontal: 10,
+          vertical: 8
+        },
         axis: 8
       },
       ...buildTimelineModeOptions(viewMode),
@@ -209,7 +212,7 @@ export const GanttView = ({
   useEffect(() => {
     const groups = channels.map((channel) => ({
       id: channel,
-      content: `<span class="gantt-group-title">${channel}</span>`
+      content: `<span class="gantt-group-header"><span class="gantt-group-title">${channel}</span></span>`
     }));
 
     groupsRef.current.clear();
@@ -240,7 +243,7 @@ export const GanttView = ({
             end: toTimelineEndExclusive(release.release_date),
             type: 'background',
             className: 'release-background',
-            style: `background: ${color}33; border-left: 2px solid ${color};`
+            style: `background: ${color}1f; border-left: 2px solid ${color};`
           },
           {
             id: `release-point:${release.channel}:${release.script_no}:${release.release_date}`,
@@ -267,7 +270,7 @@ export const GanttView = ({
           .map((task) => task.start_date)
           .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0];
         const anchorDate = toTimelineStart(minStartDate ?? floorTimelineDateToJst(new Date()));
-        timelineRef.current.setWindow(anchorDate, addDays(anchorDate, DEFAULT_DAY_WINDOW_DAYS), { animation: false });
+        timelineRef.current.setWindow(anchorDate, addDays(anchorDate, DAY_GRID_WINDOW_DAYS), { animation: false });
       } else if (tasks.length > 0) {
         timelineRef.current.fit({
           animation: false
@@ -303,7 +306,7 @@ export const GanttView = ({
     const centerMs = (range.start.getTime() + range.end.getTime()) / 2;
 
     if (viewMode === 'day') {
-      const halfRangeMs = (DEFAULT_DAY_WINDOW_DAYS * DAY_MS) / 2;
+      const halfRangeMs = (DAY_GRID_WINDOW_DAYS * DAY_MS) / 2;
       timelineRef.current.setWindow(new Date(centerMs - halfRangeMs), new Date(centerMs + halfRangeMs), {
         animation: false
       });

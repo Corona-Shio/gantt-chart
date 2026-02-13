@@ -132,8 +132,8 @@ export const App = (): JSX.Element => {
 
   const visibleTasks = useMemo(() => {
     const scoped = selectedChannel === CHANNEL_ALL ? tasks : tasks.filter((task) => task.channel === selectedChannel);
-    return sortTasks(scoped);
-  }, [selectedChannel, tasks]);
+    return sortTasks(scoped, visibleChannels);
+  }, [selectedChannel, tasks, visibleChannels]);
 
   const visibleReleaseDates = useMemo(
     () =>
@@ -452,22 +452,11 @@ export const App = (): JSX.Element => {
       </section>
 
       <main className="workspace-stage">
-        <section className="workspace-head">
-          <div className="workspace-head-block">
-            <p className="workspace-head-kicker">Table Side</p>
-            <h2>タスク編集ビュー</h2>
-          </div>
-          <div className="workspace-head-block main">
-            <p className="workspace-head-kicker">Main View</p>
-            <h2>ガントチャート</h2>
-          </div>
-        </section>
-        <p className="workspace-hint">左のタスク編集内容が右のガントに反映されます。選択状態は左右で同期します。</p>
-
         <section className="workspace-grid">
           <section className="table-panel">
             <TaskTable
               tasks={visibleTasks}
+              channelOrder={visibleChannels}
               selectedTaskId={selectedTaskId}
               statusColors={statusColors}
               canEdit={canEdit}

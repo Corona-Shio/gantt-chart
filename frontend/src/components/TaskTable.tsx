@@ -3,6 +3,7 @@ import type { Task } from '../types';
 
 interface TaskTableProps {
   tasks: Task[];
+  channelOrder: string[];
   selectedTaskId: string | null;
   statusColors: Record<string, string>;
   canEdit: boolean;
@@ -11,8 +12,14 @@ interface TaskTableProps {
   onDelete: (taskId: string) => void;
 }
 
+const toMonthDay = (date: string): string => {
+  const [, month = '', day = ''] = date.split('-');
+  return `${month}/${day}`;
+};
+
 export const TaskTable = ({
   tasks,
+  channelOrder,
   selectedTaskId,
   statusColors,
   canEdit,
@@ -29,10 +36,26 @@ export const TaskTable = ({
     }
     channelMap.set(task.channel, [task]);
   }
-  const channelBuckets = Array.from(channelMap.entries()).map(([channel, bucketTasks]) => ({
-    channel,
-    tasks: bucketTasks
-  }));
+  const channelBuckets = channelOrder
+    .map((channel) => {
+      const bucketTasks = channelMap.get(channel);
+      if (!bucketTasks || bucketTasks.length === 0) {
+        return null;
+      }
+      channelMap.delete(channel);
+      return {
+        channel,
+        tasks: bucketTasks
+      };
+    })
+    .filter((bucket): bucket is { channel: string; tasks: Task[] } => bucket !== null);
+
+  for (const [channel, bucketTasks] of channelMap.entries()) {
+    channelBuckets.push({
+      channel,
+      tasks: bucketTasks
+    });
+  }
 
   return (
     <div className="task-table-wrap">
@@ -77,7 +100,7 @@ export const TaskTable = ({
                     <td>{task.task_type}</td>
                     <td>{task.task_name}</td>
                     <td className="date-range-cell">
-                      {task.start_date} - {task.end_date}
+                      {toMonthDay(task.start_date)} - {toMonthDay(task.end_date)}
                     </td>
                     {canEdit && (
                       <td>

@@ -222,7 +222,7 @@ h1 {
   box-shadow: var(--shadow);
   overflow: hidden;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: 1fr;
 }
 
 .workspace-head {
@@ -364,6 +364,24 @@ h1 {
 .table-actions {
   display: flex;
   gap: 6px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.task-table .ghost-btn,
+.task-table .danger-btn {
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 3px 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.task-table th:last-child,
+.task-table td:last-child {
+  white-space: nowrap;
+  width: 1%;
 }
 
 .status-chip {
@@ -452,30 +470,84 @@ h1 {
   border-color: #ddd1c0;
 }
 
+.gantt-shell .vis-panel.vis-left {
+  width: 0 !important;
+  border-right: none !important;
+}
+
+.gantt-shell .vis-panel.vis-center,
+.gantt-shell .vis-panel.vis-top,
+.gantt-shell .vis-panel.vis-bottom {
+  left: 0 !important;
+}
+
+.gantt-shell .vis-labelset .vis-label {
+  border-bottom: 1px solid #e4d8c6;
+}
+
+.gantt-shell .vis-labelset .vis-label .vis-inner {
+  display: flex;
+  align-items: stretch;
+  min-height: 100%;
+  padding: 0;
+}
+
+.gantt-shell .vis-group {
+  min-height: 32px;
+  border-bottom-color: #ded4c4;
+}
+
+.gantt-shell.view-day .vis-grid.vis-vertical {
+  border-left-color: #ded4c4;
+}
+
+.gantt-shell.view-day .vis-grid.vis-horizontal {
+  border-bottom-color: #ded4c4;
+}
+
+.gantt-shell .vis-itemset .vis-background {
+  border-bottom-color: #ded4c4;
+}
+
 .gantt-group-title {
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+}
+
+.gantt-group-header {
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  width: 100%;
+  padding: 7px 10px;
+  background: #f8f1e6;
+  border-top: 1px solid #e4d8c6;
 }
 
 .task-pill {
-  border-color: #202938;
-  background: linear-gradient(120deg, #1b263b, #415a77);
-  color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #d39c3a;
+  background: linear-gradient(120deg, #ffd67f, #fff0be);
+  color: #1f2a37;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(80, 56, 18, 0.25);
 }
 
 .task-pill.selected {
-  border: 2px solid #f4a261;
+  border: 2px solid #9f4f00;
+  box-shadow: 0 0 0 2px rgba(255, 214, 127, 0.75);
 }
 
 .task-pill-text {
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.1;
+  color: #1f2a37;
+  text-shadow: none;
 }
 
 .release-background {
-  opacity: 0.8;
+  opacity: 0.2;
 }
 
 .release-point-label {
