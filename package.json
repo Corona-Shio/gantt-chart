@@ -11,6 +11,7 @@
     "typecheck": "npm --prefix frontend run typecheck",
     "test": "npm --prefix frontend run test",
     "gas:push": "clasp push",
-    "gas:deploy": "clasp deploy"
+    "gas:deploy": "npx clasp deploy --deploymentId AKfycbwIAxjObcbyoQCGMReGlmB19n25ftOSgWeGwLv-oBvEbmTXM7148onWIadnB0PSvTuF --description update",
+    "gas:deploy:new": "clasp deploy"
   }
 }

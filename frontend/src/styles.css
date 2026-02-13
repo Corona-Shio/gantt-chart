@@ -127,6 +127,21 @@ h1 {
 .toolbar-actions {
   display: flex;
   gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.view-mode-switch {
+  display: inline-flex;
+  gap: 6px;
+  padding: 3px;
+  border: 1px solid #d7c7b0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.view-mode-switch .tab {
+  padding: 5px 12px;
 }
 
 .primary-btn,
@@ -372,6 +387,61 @@ h1 {
 .vis-timeline {
   border: none;
   font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+}
+
+.vis-time-axis .vis-text {
+  font-variant-numeric: tabular-nums;
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-major {
+  font-weight: 700;
+  padding-top: 2px;
+  padding-bottom: 6px;
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor {
+  text-align: center;
+  min-height: 40px;
+  padding: 3px 2px 4px;
+  line-height: 1.2;
+  font-size: 14px;
+  overflow: visible;
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor::after {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1;
+  content: ' ';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-sunday::after {
+  content: '日';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-monday::after {
+  content: '月';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-tuesday::after {
+  content: '火';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-wednesday::after {
+  content: '水';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-thursday::after {
+  content: '木';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-friday::after {
+  content: '金';
+}
+
+.gantt-shell.view-day .vis-time-axis .vis-text.vis-minor.vis-saturday::after {
+  content: '土';
 }
 
 .vis-panel.vis-center,

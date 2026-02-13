@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 const rootDir = resolve(process.cwd());
 const distDir = resolve(rootDir, 'frontend/dist');
 const distHtmlPath = resolve(distDir, 'index.html');
-const gasIndexPath = resolve(rootDir, 'gas/src/Index.html');
+const gasIndexPaths = [resolve(rootDir, 'gas/Index.html'), resolve(rootDir, 'gas/src/Index.html')];
 
 const html = await readFile(distHtmlPath, 'utf8');
 
@@ -56,5 +56,7 @@ ${inlineScripts.join('\n')}
 </html>
 `;
 
-await writeFile(gasIndexPath, compiled, 'utf8');
-console.log(`Synced frontend build to ${gasIndexPath}`);
+for (const gasIndexPath of gasIndexPaths) {
+  await writeFile(gasIndexPath, compiled, 'utf8');
+  console.log(`Synced frontend build to ${gasIndexPath}`);
+}

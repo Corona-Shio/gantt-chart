@@ -1,7 +1,9 @@
 **/**
 !gas/appsscript.json
+!gas/Index.html
 !gas/src/**/*.gs
 !gas/src/**/*.html
 !appsscript.json
+!Index.html
 !src/**/*.gs
 !src/**/*.html

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { GanttView } from './components/GanttView';
+import type { GanttViewMode } from './components/GanttView';
 import { TaskFormModal } from './components/TaskFormModal';
 import { TaskTable } from './components/TaskTable';
 import { rpc, RpcError } from './lib/api';
@@ -77,6 +78,7 @@ export const App = (): JSX.Element => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [releaseDates, setReleaseDates] = useState<ReleaseDate[]>([]);
   const [selectedChannel, setSelectedChannel] = useState(CHANNEL_ALL);
+  const [ganttViewMode, setGanttViewMode] = useState<GanttViewMode>('day');
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [modalState, setModalState] = useState<ModalState>({ open: false });
   const [loading, setLoading] = useState(true);
@@ -370,6 +372,22 @@ export const App = (): JSX.Element => {
         </div>
 
         <div className="toolbar-actions">
+          <div className="view-mode-switch" role="group" aria-label="gantt view mode">
+            <button
+              type="button"
+              className={ganttViewMode === 'day' ? 'tab active' : 'tab'}
+              onClick={() => setGanttViewMode('day')}
+            >
+              日次
+            </button>
+            <button
+              type="button"
+              className={ganttViewMode === 'month' ? 'tab active' : 'tab'}
+              onClick={() => setGanttViewMode('month')}
+            >
+              月次
+            </button>
+          </div>
           {canEdit && (
             <button type="button" className="primary-btn" onClick={handleCreateClick}>
               新規タスク
@@ -468,6 +486,7 @@ export const App = (): JSX.Element => {
               channels={visibleChannels}
               tasks={visibleTasks}
               releaseDates={visibleReleaseDates}
+              viewMode={ganttViewMode}
               selectedTaskId={selectedTaskId}
               canEdit={canEdit}
               channelColors={channelColors}

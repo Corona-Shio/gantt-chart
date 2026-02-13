@@ -14,6 +14,7 @@ interface GanttViewProps {
   channels: string[];
   tasks: Task[];
   releaseDates: ReleaseDate[];
+  viewMode: GanttViewMode;
   selectedTaskId: string | null;
   canEdit: boolean;
   channelColors: Record<string, string>;
@@ -29,11 +30,55 @@ interface DragState {
 
 const toTaskItemId = (taskId: string): string => `task:${taskId}`;
 const fromTaskItemId = (itemId: string): string => itemId.replace(/^task:/, '');
+const DAY_MS = 1000 * 60 * 60 * 24;
+const DEFAULT_DAY_WINDOW_DAYS = 31;
+const DEFAULT_MONTH_WINDOW_DAYS = 365;
+
+export type GanttViewMode = 'day' | 'month';
+
+const buildTimelineModeOptions = (viewMode: GanttViewMode): Record<string, unknown> => {
+  if (viewMode === 'month') {
+    return {
+      timeAxis: {
+        scale: 'month',
+        step: 1
+      },
+      zoomMin: DAY_MS * 30,
+      zoomMax: DAY_MS * 365 * 4,
+      format: {
+        minorLabels: {
+          month: 'M月'
+        },
+        majorLabels: {
+          month: 'YYYY年'
+        }
+      }
+    };
+  }
+
+  return {
+    timeAxis: {
+      scale: 'day',
+      step: 1
+    },
+    zoomMin: DAY_MS * 21,
+    zoomMax: DAY_MS * 365 * 2,
+    format: {
+      minorLabels: {
+        day: 'D'
+      },
+      majorLabels: {
+        day: 'YYYY年M月'
+      }
+    }
+  };
+};
 
 export const GanttView = ({
   channels,
   tasks,
   releaseDates,
+  viewMode,
   selectedTaskId,
   canEdit,
   channelColors,
@@ -66,8 +111,7 @@ export const GanttView = ({
         item: 12,
         axis: 8
       },
-      zoomMin: 1000 * 60 * 60 * 24 * 3,
-      zoomMax: 1000 * 60 * 60 * 24 * 365 * 2,
+      ...buildTimelineModeOptions(viewMode),
       editable: canEdit
         ? {
             updateTime: true,
@@ -160,7 +204,7 @@ export const GanttView = ({
       timeline.destroy();
       timelineRef.current = null;
     };
-  }, [canEdit, groupIdSet, onRequestCreate, onRequestMove, onSelectTask]);
+  }, [canEdit, groupIdSet, onRequestCreate, onRequestMove, onSelectTask, viewMode]);
 
   useEffect(() => {
     const groups = channels.map((channel) => ({
@@ -217,13 +261,26 @@ export const GanttView = ({
       timelineRef.current.setSelection([toTaskItemId(selectedTaskId)]);
     }
 
-    if (timelineRef.current && !fittedOnceRef.current && tasks.length > 0) {
-      timelineRef.current.fit({
-        animation: false
-      });
+    if (timelineRef.current && !fittedOnceRef.current) {
+      if (viewMode === 'day') {
+        const minStartDate = tasks
+          .map((task) => task.start_date)
+          .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0];
+        const anchorDate = toTimelineStart(minStartDate ?? floorTimelineDateToJst(new Date()));
+        timelineRef.current.setWindow(anchorDate, addDays(anchorDate, DEFAULT_DAY_WINDOW_DAYS), { animation: false });
+      } else if (tasks.length > 0) {
+        timelineRef.current.fit({
+          animation: false
+        });
+      } else {
+        const center = toTimelineStart(floorTimelineDateToJst(new Date()));
+        timelineRef.current.setWindow(addDays(center, -DEFAULT_MONTH_WINDOW_DAYS / 2), addDays(center, DEFAULT_MONTH_WINDOW_DAYS / 2), {
+          animation: false
+        });
+      }
       fittedOnceRef.current = true;
     }
-  }, [channels, tasks, releaseDates, selectedTaskId, groupIdSet, channelColors]);
+  }, [channels, tasks, releaseDates, selectedTaskId, groupIdSet, channelColors, viewMode]);
 
   useEffect(() => {
     if (!timelineRef.current) {
@@ -231,6 +288,7 @@ export const GanttView = ({
     }
 
     timelineRef.current.setOptions({
+      ...buildTimelineModeOptions(viewMode),
       editable: canEdit
         ? {
             updateTime: true,
@@ -240,7 +298,23 @@ export const GanttView = ({
           }
         : false
     });
-  }, [canEdit]);
 
-  return <div className="gantt-shell" ref={containerRef} />;
+    const range = timelineRef.current.getWindow();
+    const centerMs = (range.start.getTime() + range.end.getTime()) / 2;
+
+    if (viewMode === 'day') {
+      const halfRangeMs = (DEFAULT_DAY_WINDOW_DAYS * DAY_MS) / 2;
+      timelineRef.current.setWindow(new Date(centerMs - halfRangeMs), new Date(centerMs + halfRangeMs), {
+        animation: false
+      });
+      return;
+    }
+
+    const halfRangeMs = (DEFAULT_MONTH_WINDOW_DAYS * DAY_MS) / 2;
+    timelineRef.current.setWindow(new Date(centerMs - halfRangeMs), new Date(centerMs + halfRangeMs), {
+      animation: false
+    });
+  }, [canEdit, viewMode]);
+
+  return <div className={`gantt-shell ${viewMode === 'day' ? 'view-day' : 'view-month'}`} ref={containerRef} />;
 };
